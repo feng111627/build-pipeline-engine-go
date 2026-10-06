@@ -1,0 +1,32 @@
+{
+  "concurrency": 3,
+  "timeout": "5m",
+  "steps": [
+    {
+      "name": "lint",
+      "command": "echo lint"
+    },
+    {
+      "name": "gen",
+      "command": "echo generated",
+      "inputs": [
+        { "name": "spec", "value": "v2" },
+        { "name": "schema", "file": "examples/schema.txt" }
+      ]
+    },
+    {
+      "name": "build",
+      "command": "echo build > build.log",
+      "inputs": [{ "name": "spec", "value": "v2" }],
+      "outputs": ["build.log"],
+      "depends": ["lint", "gen"],
+      "retries": 1,
+      "timeout": "2m"
+    },
+    {
+      "name": "test",
+      "command": "grep build build.log",
+      "depends": ["build"]
+    }
+  ]
+}
